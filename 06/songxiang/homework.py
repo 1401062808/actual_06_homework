@@ -8,9 +8,8 @@ app = Flask(__name__)
 
 def index():
 	global d
-	f = open('data.txt','r')
-	datas = f.readlines()
-	f.close()
+	with open('data.txt','r') as f:
+		datas = f.readlines()
 	for i in datas:
 		temp = i.strip().split()
 		d[temp[0]] = temp[1]
@@ -19,16 +18,32 @@ def index():
 			<html>
 				<head>
 					<title>form</title>
+					<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css">
+					<style>
+					#table{
+						margin-top: 20px;
+
+					}
+					#form{
+						margin-top: 20px;
+
+					}
+					</style>
 				</head>
 				<body>
-					<form action="/add" method="get" accept-charset="utf-8">
-						user:
+					<div id="form" class="container">
+					<form action="/add" method="get" accept-charset="utf-8" class="form-inline">
+						<div>
+						<label for="exampleInputName2">Name</label>
 						<input type="text" name="user" value="" placeholder="">
-						passwd:
+						<label for="exampleInputName2">Password</label>
 						<input type="password" name="passwd" value="" placeholder="">
-						<input type="submit" name="submit" value="">
+						<button type="submit" name="submit" class="btn btn-primary" >添加用户</button>
+						</div>
 					</form>
-					<table action="/dele" border = '1'>
+					</div>
+					<div id="table" class="container-fluid">
+					<table class="table table-striped table-hover table-bordered" action="/dele" >
 						<thead>
 							<tr>
 								<th>name</th>
@@ -41,6 +56,7 @@ def index():
 	web_end = '''
 								</tbody>
 					</table>
+					</div>
 
 				</body>
 			</html>
@@ -49,7 +65,7 @@ def index():
 	web_mid = ''
 	for i in d:
 		lines = ''
-		lines = '''<tr><td>%s</td><td>%s</td><td><a   href="/dele?name=%s">删除</a></td></tr>''' % (i,d[i],i)
+		lines = '''<tr><td>%s</td><td>%s</td><td><a href="/dele?name=%s">删除</a></td></tr>''' % (i,d[i],i)
 		web_mid = web_mid+lines
 
 
@@ -62,10 +78,9 @@ def add():
 	if name in d:
 		return "该用户已存在"
 	else:
-		f=open('data.txt','a+')
-		user_passwd = '%s %s' % (name,passwd)
-		f.writelines(user_passwd)
-		f.close()
+		with open('data.txt','a+') as f:
+			user_passwd = '%s %s\n' % (name,passwd)
+			f.writelines(user_passwd)
 		return  index()
 @app.route('/dele')
 def delet():
@@ -77,9 +92,8 @@ def delet():
 	for i in d:
 		re_write = '%s %s\n' % (i,d[i])
 		re_writes.append(re_write)
-	f=open('data.txt','w+')
-	f.writelines(re_writes)
-	f.close()
+	with open('data.txt','w+') as f:
+		f.writelines(re_writes)
 	return index()
 if __name__ == '__main__':
 	d = {}
