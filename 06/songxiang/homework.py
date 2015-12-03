@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 
-def index():
+def index(n = 0):
 	global d
 	with open('data.txt','r') as f:
 		datas = f.readlines()
@@ -68,15 +68,21 @@ def index():
 		lines = '''<tr><td>%s</td><td>%s</td><td><a href="/dele?name=%s">删除</a></td></tr>''' % (i,d[i],i)
 		web_mid = web_mid+lines
 
-
-	return web_head + web_mid + web_end
+	if n == 0:
+		return web_head + web_mid + web_end
+	elif n == 1:
+		return web_head + web_mid + '''</tbody></table></div><script type="text/javascript">alert("该用户不存在")</script></body></html>'''
+	elif n == 2:
+		return web_head + web_mid + '''</tbody></table></div><script type="text/javascript">alert("错误的用户名或密码")</script></body></html>'''
 @app.route('/add')
 def add():
 	global d
 	name = request.args.get('user')
 	passwd = request.args.get('passwd')
 	if name in d:
-		return "该用户已存在"
+		return index(1)
+	elif name == '' or passwd =='':
+		return index(2)
 	else:
 		with open('data.txt','a+') as f:
 			user_passwd = '%s %s\n' % (name,passwd)
