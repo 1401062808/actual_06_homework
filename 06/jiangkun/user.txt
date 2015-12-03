@@ -1,0 +1,6 @@
+xiaoming 456
+wd uuu
+admin admin
+reboot 123
+adf 123
+user pwd
