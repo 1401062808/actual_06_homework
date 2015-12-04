@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Welcome</title>
+<style>
+table, td {
+    border: 1px solid black;
+}
+</style>
+
+</head>
+
+<body>
+
+<form action=/add method="get">
+  name: <input type="text" name="name">
+  password: <input type="text" name="pwd">
+  <input type="submit" value="add">
+</form>
+
+<table>
+  <tr>
+    <td>user</td>
+    <td>pwd</td>
+    <td>operate</td>
+  </tr>
+{% for item in users %}
+  <tr>
+    <td>{{ item }}</td>
+    <td>{{ users[item] }}</td>
+    <td><a href='/del?user={{ item }}'>删除</a></td>
+  </tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
+
