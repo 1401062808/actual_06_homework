@@ -12,6 +12,10 @@ def analysis_expression(exp_str):
     if error in expression: return -1
     else: return exp_list (numbers, operators)
     '''
+    # exp_str = ''
+    if len(exp_str) == 0:
+        return -1
+    
     # delete blank in exp_str
     tmp_list = exp_str.split(' ')
     exp_str = ''.join(tmp_list)
@@ -178,3 +182,4 @@ if __name__ == '__main__':
     print calculation1('1+2*3')
     print calculation2('1+2*3')
     print calculation2('1*5+2*3*3+5/-6/7')
+    print calculation1('')

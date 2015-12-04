@@ -6,12 +6,12 @@ def caculate(number1,symbol,number2):
 		return float(number1) - float(number2)
 	elif symbol == '*':
 		return float(number1) * float(number2)
-	elif symbol == '/' and numers[2] != 0:
+	elif symbol == '/' and number2 != 0:
 		return float(number1) / float(number2)
 def opearte(string):
 	number_list = []
 	symbols = ['-','+','*','/']
-	numbers = ['0','1','2','3','4','5','6','7','8','9']
+	numbers = ['0','1','2','3','4','5','6','7','8','9','.']
 	number_str = ''
 	for i in string:
 		if i in symbols and number_str != '':
@@ -56,7 +56,7 @@ def pre_plus(number_list):
 		count = count + 1
 	return number_list
 if __name__ == '__main__':
-	a = '1+2*4'
+	a = '2.4+1'
 	result = opearte(a)
 	print result
 

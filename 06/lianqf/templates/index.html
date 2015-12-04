@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		
+	</title>
+</head>
+<body>
+	<form action="/add">
+		name:<input type="text" value="user" name="user">
+		password:<input type="text" value="password" name="password">
+			<input type="submit" value="add">
+	</form>
+	<p>{{msg}}</p>
+	<table border='1'>
+		{% for key in userpass %}
+		<tr>
+			<td>{{ key }}</td>
+			<td>{{ userpass[key] }}</td>
+			<td><a href="/del?user={{ key }}">Delete</a></td>
+			    
+			
+		</tr>	
+		{% endfor %}		
+	</table>
+		
+</body>
+</html>

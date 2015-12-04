@@ -1,0 +1,24 @@
+<title>denglu</title>
+<body>
+<form action='/home/action'>
+	name:<input type='text' name='user'>
+	passwd:<input type='text' name='pwd'>
+	<input type='submit' value='add'>
+</form>
+<p>{{msg}}</p>
+
+<table border='1'>
+	<tr>
+		<th>user</th>
+		<th>passwd</th>
+		<th>operate</th>
+	</tr>
+		{% for i in user_dic %}
+	<tr>
+		<td>{{ i }}</td>
+		<td>{{ user_dic[i] }}</td>
+		<td><a href="/home/del?user={{i}}">删除</a></td>
+	</tr>	
+		{% endfor %}		
+</table>
+</body>

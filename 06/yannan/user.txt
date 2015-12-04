@@ -1,0 +1,5 @@
+admin admin
+user pwd
+reboot 123
+xiaoming 456
+wd uuu
