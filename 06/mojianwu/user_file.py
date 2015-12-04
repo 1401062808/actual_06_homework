@@ -43,18 +43,17 @@ def useradd():
 	else:
 		return 'username has already in user.txt'
 
-# @app.route('/userdel')
-# def userdel():
-# 	userName = request.args.get('username')
-# 	passWord = request.args.get('password')
-# 	global user_dict
-# 	if userName in user_dict:
-# 		user_dict.pop(userName)
-# 	with open('user.txt', 'w') as f:
-# 		for i in user_dict:
-# 			user_info = 
-# 			f.write
-
+@app.route('/userdel')
+def userdel():
+	global user_dict
+	userName = request.args.get('username')
+	if userName in user_dict:
+		user_dict.pop(userName)
+	with open('user.txt', 'w') as f:
+		for i in user_dict:
+			f.write('%s %s\n' %(i, user_dict[i]))
+	f.close()
+	return index()
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=9090, debug=True)
