@@ -81,7 +81,7 @@ def add():
 	passwd = request.args.get('passwd')
 	if name in d:
 		return index(1)
-	elif name == '' or passwd =='':
+	elif name == "" or passwd == "" :
 		return index(2)
 	else:
 		with open('data.txt','a+') as f:
