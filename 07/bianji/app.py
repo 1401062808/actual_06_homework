@@ -29,10 +29,19 @@ def index():
         except Exception as e:
             abort(500)
         return redirect(url_for('index'))
-    g.cursor.execute("SELECT * FROM `user`")
+    page = int(request.args.get('page',1))
+    num = 5
+    g.cursor.execute("SELECT COUNT(*) FROM `user`")
+    total = g.cursor.fetchone()[0]
+    if total % num == 0:
+        pages = total / num
+    else:
+        pages = total / num + 1
+    start_position = (page - 1 ) * num
+    g.cursor.execute("SELECT * FROM `user` limit %s,%s" % (start_position,num))
     data = g.cursor.fetchall()
     print data
-    return render_template('homework.html',userdata = data)
+    return render_template('homework.html',userdata = data,pages = pages)
 
 
 @app.route('/del',methods=['POST'])
