@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>databases</title>
+</head>
+<body>
+	<form action='/add' method="get" accept-charset="utf-8">
+		user:
+		<input type="text" name="user" value="" placeholder="">
+		passwd:
+		<input type="password" name="passwd" value="" placeholder="">		
+		<input type="submit" name="submit" value="Add User">
+		</form>
+	<table border = 1>
+		<tr>
+			<th>ID</th>
+			<th>Username</th>
+			<th>Password</th>
+		</tr>
+		{% for i in data%}
+		<tr>	
+			<td>{{i[0]}}</td>
+			<td>{{i[1]}}</td>
+			<td>{{i[2]}}</td>	
+		</tr>
+		{% endfor %}
+	</table>
+
+</body>
+</html>
