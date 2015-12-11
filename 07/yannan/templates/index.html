@@ -3,21 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>YanzilLa</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <style>
-        #test{
-            width: auto;
-            height: 500px;
-            background: #4cedb3;
-        }
+		#table-demo{
+			margin-top:20px;
+		}
+		#form-demo{
+			margin-top: 20px;
+			margin-left: 20px;
+		}
+		#span-demo{
+			color: green;
+			font-size: 100px;
+		}
     </style>
 </head>
 <body>
-     <form action="/add">
-        user:<input type="text" name="user">
-        pwd:<input type="text" name="pwd">
-        <input type="submit" value="add">
-    </form>
-    <table border="1"><tr><td>id</td><td>username</td><td>password</td><td>opration</td></tr>
+     <form id='form-demo' class="form-inline" action="/add">
+         <div class="form-group">
+             <label>用户</label>
+             <input type="text" name="user" class="form-control">
+         </div>
+         <div class="form-group">
+             <label>密码</label>
+             <input type="text" name="pwd" class="form-control">
+         </div>
+             <input type="submit" class="btn btn-danger" value="新增">
+     </form>
+     <table style="table-layout:fixed;width:500px" border="1" cellspacing="1" cellpadding="1" id='table-demo' class='table table-striped table-bordered'>
+         <tr><td>id</td><td>username</td><td>password</td><td>opration</td></tr>
 {% if data %}
     {% for srvinfo in data %}
         <tr>
