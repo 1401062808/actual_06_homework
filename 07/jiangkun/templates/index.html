@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User_list</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <style>
+        #table-demo{
+            width: 720px;
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+        #form-demo{
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+        #alert-demo{
+            width: 720px;
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form-demo" class="form-inline" action="/add">
+      <div class="form-group">
+        <label for="exampleInputName2">Name</label>
+        <input type="text" name="name" class="form-control" id="exampleInputName2" placeholder="User name">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" name="passwd" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+
+    {% if error %}
+        <div id="alert-demo" class="alert alert-danger alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hiden="true">x</span>
+            </button>
+            <h4>{{error}}</h4>
+        </div>
+    {% endif %}
+
+    <table id=table-demo class="table table-striped">
+        <tr class="success">
+            <th>name</th>
+            <th>password</th>
+            <th>action</th>
+        </tr>
+        {% if data %}
+            {% for d in data %}
+            <tr>
+                <td>{{d[1]}}</td>
+                <td>{{d[2]}}</td>
+                <td><a href="/delete?id={{d[0]}}" class="btn btn-danger active" role="button">delete</a></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <div id="alert-demo" class="alert alert-warning alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hiden="true">x</span>
+                </button>
+                <h4>There is not data in table.</h4>
+            </div>
+        {% endif %}
+    </table>
+</body>
+</html>
