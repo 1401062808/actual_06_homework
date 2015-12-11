@@ -15,6 +15,7 @@ def get_data():
 	    dict_user[data[1]] = data[2]
 	return dict_user
 
+
 def del_data(username):
 	
 	db  = mysql.connect(host='192.168.31.222',user='root',passwd='ABCabc123',db='lianqf')
@@ -25,6 +26,8 @@ def del_data(username):
 	print sql
 
 	print cur.execute(sql)
+
+
 
 def add_data(user,password):
 
@@ -47,12 +50,15 @@ def index():
 def Uadd():
 	user = request.args.get('user') 
 	password = request.args.get('password') 
+	dict_sqluser = get_data()
 	if user=='' or password=='' :
 		message = "user or password is null!"
 	else:
-		print '%s %s' %(user,password)
-		add_data(user,password)
-		message = "%s is add!" %user
+		if user not in dict_sqluser:
+			add_data(user,password)
+			message = "%s is add!" %user
+		else:
+			message = "%s is exist!" %user
 	dict_sqluser = get_data()
 	return render_template('index.html',userpass=dict_sqluser,msg=message)
 
