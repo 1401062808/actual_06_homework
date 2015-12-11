@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Welcome</title>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+
+<body style="margin-top: 20px">
+
+<form  action=/add method="get" class="form-inline">
+  <label class="btn btn-success">name</label>
+  <input class="form-control" type="text" name="name" placeholder="name">
+  <label class="btn btn-success">password</label>
+  <input class="form-control" type="text" name="pwd" placeholder="password">
+  <input  type="submit" class="btn btn-info" value="add">
+</form>
+
+<table class="table table-bordered">
+  <tr>
+    <td>user</td>
+    <td>pwd</td>
+    <td>operate</td>
+  </tr>
+{% for item in users %}
+  <tr>
+    <td>{{ item }}</td>
+    <td>{{ users[item] }}</td>
+    <td><a href='/del?user={{ item }}' class="btn btn-danger">删除</a></td>
+  </tr>
+{% endfor %}
+</table>
+</body>
+</html>
+
