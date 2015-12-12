@@ -12,12 +12,19 @@
             text-align:center;
             margin-top:100px;
         }
-
     </style>
 </head>
-<body>
 
-<table id='table-demo' class='table table-bordered'>
+<body>
+    <form action='/add' method="get" accept-charset="utf-8">
+        user:
+        <input type="text" name="user" value="" placeholder="">
+        passwd:
+        <input type="password" name="passwd" value="" placeholder="">       
+        <input type="submit" name="submit" value="Add User">
+        </form>
+
+<table id='table-demo' class='table table-bordered' border = 1>
 
     <tr>
         <td>ID</td>
@@ -26,34 +33,15 @@
         <td>delete</td>
     </tr>
     <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
+        {% for i in data%}
     </tr>
     <tr>
-        <td>2</td>
-        <td>3</td>
-        <td>2</td>
-        <td>4</td>
+        <td>{{i[0]}}</td>
+        <td>{{i[1]}}</td>
+        <td>{{i[2]}}</td>
+        <td><a href="/delete?user={{i[1]}}">delete</a></td>
     </tr>
-    <tr>
-        <td>3</td>
-        <td>5</td>
-        <td>6</td>
-        <td>4</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>8</td>
-        <td>9</td>
-        <td>4</td>
-    </tr>
-        <td>5</td>
-        <td>100</td>
-        <td>100</td>
-        <td>100</td>
-    </tr>
+        {% endfor %}
 </table>
 
 </body>
