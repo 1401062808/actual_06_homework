@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>homework08</title>
+    <link rel="stylesheet" href="./static/bootstrap.min.css">
+    <style>
+		#table-demo{
+			margin-top:20px;
+		}
+		#form-demo{
+			margin-top: 20px;
+			margin-left: 20px;
+		}
+		#span-demo{
+			color: green;
+			font-size: 100px;
+		}
+    </style>
+</head>
+<body>
+     <!--用新样式全部重写表单部分，增加自定义id，用于js定位，去掉action，改由js函数抓取-->
+     <form id='form-demo' class="form-inline" action="/add">
+         <div class="form-group">
+             <label>用户</label>
+             <input type="text" name="user" class="form-control">
+         </div>
+         <div class="form-group">
+             <label>密码</label>
+             <input type="text" name="pwd" class="form-control">
+         </div>
+             <input type="submit" class="btn btn-danger" value="新增">
+     </form>
+     <!--表格部分同样新样式重新，表头按新样式定义，表单用js函数抓取，与后端用json通信-->
+     <table style="table-layout:fixed;width:500px" border="1" cellspacing="1" cellpadding="1" id='table-demo' class='table table-striped table-bordered'>
+         <tr><td>No.</td><td>username</td><td>password</td><td>opration</td></tr>
+     </table>
+     <script src="./static/jquery.js"></script>
+     <script src="./static/bootstrap.min.js"></script>
+     <script>
+//         1.抓取整体表单展示index()
+//         2.抓取提交按钮，和提交内容用于add()
+//         3.抓取删除click，用于del()
+     </script>
+<!--{% if data %}-->
+    <!--{% for srvinfo in data %}-->
+        <!--<tr>-->
+            <!--<td>{{srvinfo[0]}}</td>-->
+            <!--<td>{{srvinfo[1]}}</td>-->
+            <!--<td>{{srvinfo[2]}}</td>-->
+            <!--<td><a href="/delete?user={{srvinfo[1]}}">delete</a></td>-->
+        <!--</tr>-->
+    <!--{% endfor %}-->
+<!--{% endif %}-->
+</body>
+</html>
