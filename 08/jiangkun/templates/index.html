@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User_list</title>
+    <link rel="stylesheet" href="./static/bootstrap.min.css">
+    <script src="/static/jquery.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <style>
+        #user_list_table{
+            width: 720px;
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+        #form-demo{
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+        #alert_res_status{
+            width: 720px;
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 执行结果 -->
+    <div id="alert_res_status"></div>
+    
+    <!-- 这里不能用form 会有action执行，导致页面变化 -->
+    <div id="form-demo" class="form-inline">
+      <div class="form-group">
+        <label for="exampleInputName2">Name</label>
+        <input type="text" name="name" class="form-control" id="name" placeholder="User name">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" name="passwd" class="form-control" id="passwd" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-primary" id="btn_add">Add</button>
+    </div>
+
+
+
+    <table id="user_list_table" class="table table-striped">
+        <tr class="success">
+            <th>name</th>
+            <th>password</th>
+            <th>action</th>
+        </tr>
+        {% if data %}
+            {% for d in data %}
+            <tr>
+                <td>{{d[1]}}</td>
+                <td>{{d[2]}}</td>
+                <!-- <td><a href="/delete?id={{d[0]}}" class="btn btn-danger active" role="button">delete</a></td> 
+                <td><input id='btn_del' id_num="{{d[0]}}" type='submit'>Delelte</td>
+                -->
+                <td><button type="button" class="btn btn-danger" id="btn_del" id_num="{{d[0]}}">Delete</button></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <div id="alert-demo" class="alert alert-warning alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hiden="true">x</span>
+                </button>
+                <h4>There is not data in table.</h4>
+            </div>
+        {% endif %}
+    </table>
+
+        <script>
+        function res_status_func(res_status, status_code){
+            if (status_code == 0){
+                // error alert-danger
+                var res = '<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hiden="true">x</span></button><h4 id="content-res-status">'+res_status+'</h4></div>'
+            }
+            else{
+                // ok alert-success
+                var res = '<div class="alert alert-success alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hiden="true">x</span></button><h4 id="content-res-status">'+res_status+'</h4></div>'
+            }
+            return res
+        }
+
+        $('#btn_add').on('click', function(){
+            var name = $('#name').val()
+            var passwd = $('#passwd').val()
+            // var id_num = $('#id_num').val()
+            // console.log(name+":"+passwd)
+            // name == ""  passwd == ""
+            if (name == "" || passwd == ""){
+                // name or passwd is empty
+                var res_status = "name or passwd is empty"
+                var status_code = 0
+                var res_alert = res_status_func(res_status, status_code)
+                $('#alert_res_status').html(res_alert)
+            }
+
+            var url_add = '/add?name='+name+'&passwd='+passwd
+            
+            $.getJSON(url_add, function(res){
+                // console.log("success")
+                var table_content = '<tr class="success"><td>name</td><td>passwd</td><td>opertion</td></tr>'
+                // var res_alert = ''
+
+                $.each(res, function(index, value){
+                    if (index == 0){
+                        // 执行结果的状态或者报错信息
+                        var res_status = value[1]
+                        var status_code = value[2]
+
+                        var res_alert = res_status_func(res_status, status_code)
+                        $('#alert_res_status').html(res_alert)
+                    }
+                    else{
+                        table_content += "<tr><td>"+value[1]+"</td><td>"+value[2]
+                        table_content += '<td><button type="button" class="btn btn-danger" id="btn_del" id_num="'+value[0]+'">Delete</button></td>'
+                    }
+                })
+                
+                $('#user_list_table').html(table_content)
+            })
+        })
+
+        $(document).on('click', '#btn_del', function(){
+            // $(this)  当前点击对象
+            var id_num = $(this).attr('id_num')
+            // console.log(id_num)
+            var url_del = '/delete?id_num='+id_num
+            $.getJSON(url_del, function(res){
+                // console.log("success")
+                var table_content = '<tr class="success"><td>name</td><td>passwd</td><td>opertion</td></tr>'
+
+                $.each(res, function(index, value){
+                    if (index == 0){
+                        // 执行结果的状态或者报错信息
+                        var res_status = value[1]
+                        var status_code = value[2]
+                        // console.log(res_status)
+
+                        var res_alert = res_status_func(res_status, status_code)
+                        // console.log(res_alert)
+                        $('#alert_res_status').html(res_alert)
+                    }
+                    else{
+                        table_content += "<tr><td>"+value[1]+"</td><td>"+value[2]
+                        table_content += '<td><button type="button" class="btn btn-danger" id="btn_del" id_num="'+value[0]+'">Delete</button></td>'
+                    }
+                })
+                $('#user_list_table').html(table_content)
+            })
+        })
+    </script>
+</body>
+</html>
