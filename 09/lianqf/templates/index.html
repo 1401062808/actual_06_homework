@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="../static/css/jquery-ui.css">
+	<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../static/css/sweetalert.css">
+	<link rel="stylesheet" href="../static/css/hover.css">
+	<style type="">
+/*		#show-table{
+			margin-top: 10px;
+			/*margin-left: 5px;*/
+		}
+		.container{
+			margin-top: 5px;
+			/*margin-right: 5px;*/
+		}*/
+
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div id='divmenu' class="col-md-1" >mume
+				<a id='btn_server'class="hvr-bounce-to-left" href="#"><font size='5'>Servers</font></a>
+				<a id='btn_user' class="hvr-bounce-to-left" href="#"><font size='5'>Users</font></a>
+				<a id='btn_logout' class="hvr-bounce-to-left" href="/logout"><font size='5'>logout</font></a>
+			</div>
+			<div class="col-md-11">content
+				<table id='show-table' class="table table-bordered text-center">
+					
+
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Servers detail EDIT</h4>
+	      </div>
+	      <div class="modal-body">
+
+				<form class="form-horizontal">
+				  <div class="form-group">
+				  	<label for="inputEmail3" class="col-sm-2 control-label">ID</label>
+				  	<div class="col-sm-10">
+				      <input type="text" class="form-control" id="m-id-input" readonly="readonly">
+				    </div>
+				    <label for="inputEmail3" class="col-sm-2 control-label">HOST</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="m-host-input" >
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">MEMORY</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="m-memory-input" >
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">DISK</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="m-disk-input" >
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">CPU</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="m-cpu-input" >
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label class="col-sm-2 control-label">VENDOR</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="m-vendor-input">
+				    </div>
+				  </div>
+				</form>
+
+				
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" id="saveserver-btn">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+
+
+
+	<script src="../static/js/jquery.js"></script>
+	<script src="../static/js/jquery-ui.js"></script>
+	<script src="../static/js/sweetalert.min.js"></script>
+	<script src="../static/js/bootstrap.min.js"></script>	
+	
+	<script>
+		$(Document).on('click','#btn_server',function(){
+			getserver()
+		})
+
+		$(Document).on('click','#btn_user',function(){
+			getuser()
+		})
+
+		$(Document).on('click','#adduser-btn',function(){
+			var name = $('#user-input').val()
+			var pwd = $('#password-input').val()
+			$.get('/adduser?user='+name+'&pwd='+pwd,function(data){
+				if(data=='ok'){
+					getuser()
+				}
+			})
+		})
+
+		$(Document).on('click','#deluser-btn',function(){
+			var id = $(this).attr('data-id')
+			console.log(id)
+			$.get('/deluser?id='+id,function(data){
+				console.log(data)
+				if(data == 'ok'){
+					getuser()
+				}
+			})
+
+		})
+
+		$(Document).on('click','#addserver-btn',function(){
+			var host = $('#host-input').val()
+			var memory = $('#mem-input').val()
+			var disk = $('#disk-input').val()
+			var cpu = $('#cpu-input').val()
+			var vendor = $('#vendor-input').val()
+			if (host == ''){
+				sweetAlert("ERROR", "host not Null!", "error");
+			}else{
+				$.get('/addserver?host='+host+'&memory='+memory+'&disk='+disk+'&cpu='+cpu+'&vendor='+vendor,function(data){
+					if(data=='ok'){
+						getserver()
+					}
+				})
+			}
+			
+		})
+
+		$(Document).on('click','#delserver-btn',function(){
+			var id = $(this).attr('data-id')
+			console.log(id)
+			$.get('/delserver?id='+id,function(data){
+				console.log(data)
+				if(data == 'ok'){
+					getserver()
+				}
+			})
+
+		})
+
+		$(Document).on('click','#editserver-btn',function(){
+			var data = $(this).attr('data')
+			var datalist = data.split(',')
+			console.log(data)
+			console.log(datalist)
+			console.log(datalist.length)
+			$('#myModal').modal('show')
+			$('#m-id-input').val(datalist[0])
+			$('#m-host-input').val(datalist[1])
+			$('#m-memory-input').val(datalist[2])
+			$('#m-disk-input').val(datalist[3])
+			$('#m-cpu-input').val(datalist[4])	
+			$('#m-vendor-input').val(datalist[5])		
+		})
+
+		$('#saveserver-btn').on('click',function(){
+			var id = $('#m-id-input').val()
+			var host = $('#m-host-input').val()
+			var memory = $('#m-memory-input').val()
+			var disk = $('#m-disk-input').val()
+			var cpu = $('#m-cpu-input').val()
+			var vendor = $('#m-vendor-input').val()
+			$.get('/updateserver?id='+id+'&host='+host+'&memory='+memory+'&disk='+disk+'&cpu='+cpu+'&vendor='+vendor,function(data){
+				if(data=='ok'){
+					$('#myModal').modal('hide')
+					getserver()
+				}
+			})
+
+		})
+
+		// $(Document).on('click','#btn_logout',function(){
+
+		// })
+
+		function getuser(){
+			$.getJSON('/userlist',function(data){
+				tmp = '<tr><td></td><td><input type="text" class="form-control" id="user-input" placeholder="User"></td><td><input type="password" class="form-control" id="password-input" placeholder="password"></td><td></td><td><button id="adduser-btn"  class="btn btn-success">INSERT</button></td></tr>'
+				$.each(data,function(index,value){
+					console.log(value)
+					tmp += '<tr><td>'+value[0]+'</td><td>'+value[1]+'</td><td>'+value[2]+'</td><td><button id="edituser-btn" class="btn btn-info" data-id="'+value[0]+'">EDIT</button></td><td><button id="deluser-btn" class="del-btn btn btn-danger" data-id="'+value[0]+'">delete</button></td></tr>'
+				})
+				$('#show-table').html(tmp)
+			})
+
+		}
+
+		function getserver(){
+			$.getJSON('/serverlist',function(data){
+				tmp = '<tr><td></td><td><input type="text" class="form-control" id="host-input" placeholder="HOST"></td><td><input type="text" class="form-control" id="mem-input" placeholder="MEMORY"></td><td><input type="text" class="form-control" id="disk-input" placeholder="DISK"></td><td><input type="text" class="form-control" id="cpu-input" placeholder="CPU"></td><td><input type="text" class="form-control" id="vendor-input" placeholder="VENDOR"></td><td></td><td><button id="addserver-btn" class="btn btn-success">INSERT</button></td><tr>'
+				$.each(data,function(index,value){
+					tmp += '<tr><td>'+value[0]+'</td><td>'+value[1]+'</td><td>'+value[2]+'</td><td>'+value[3]+'</td><td>'+value[4]+'</td><td>'+value[5]+'</td><td><button id="editserver-btn" class="btn btn-info" data="'+value+'" data-toggle="modal" >EDIT</button></td><td><button id="delserver-btn" class="del-btn btn btn-danger" data-id="'+value[0]+'">DELETE</button></td></tr>'
+				})
+				$('#show-table').html(tmp)
+			})
+		}
+		
+
+		getserver()
+	</script>
+</body>
+</html>
