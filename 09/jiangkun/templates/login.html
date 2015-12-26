@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/signin.css">
+</head>
+<body>
+    <div class="container">
+    <!-- bootstrap 同步方式 form  中input有 name="name" 等会后自动拼接
+    <input name="name">
+    <input name="pwd">
+    <button type=submit>
+        /loginaction?name=admin&pwd=123
+     -->
+      <form class="form-signin" action='/loginaction'>
+        <h2 class="form-signin-heading">Login</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="text" id="name-input" class="form-control" placeholder="name" name="name">
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="text" id="passwd-input" class="form-control" placeholder="Password" name="pwd">
+
+        
+        <button class="btn btn-lg btn-primary btn-block" id="login-btn" type="submit">Sign in</button> 
+        <!-- <button class="btn btn-lg btn-primary btn-block" id="login-btn" type="button">Sign in</button>-->
+      </form>
+
+    </div>
+
+    <script src='/static/jquery.js'></script>
+    <script>
+    $('#login-btn').on('click', function(){
+        var email = $('#name-input').val()
+        var passwd = $('#passwd-input').val()
+        // var is_rem = $('#rem-ckb').val()
+        // console.log(email+":"+passwd+":"+is_rem)
+    })
+    </script>
+</body>
+</html>
