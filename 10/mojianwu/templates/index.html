@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/jquery-ui.css">
+    <link rel="stylesheet" href="../static/sweetalert.css">
+    <style>
+        #tableContent {
+            margin-top: 50px;
+            text-align: center;
+        }
+        th {
+            text-align: center;
+        }
+        .form-group {
+            margin: 50px;
+            padding: 5px
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form action="/add" class="for-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">host</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputHost">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">memory</label>
+                    <div class="col-sm-10">
+                        <div id="sliderMem"></div>
+                        <label id="sliderValue">1G</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">end day</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputDate">
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success col-md-offset-6" id="add-btn">add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row modal" id="modContent">
+        <div class="modal-content col-md-6 col-md-offset-3">
+            <form action="/mod" class="for-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">host</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="modHost">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">memory</label>
+                    <div class="col-sm-10">
+                        <div id="modSliderMem"></div>
+                        <label id="modSliderValue">1G</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">end day</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="modDate">
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success col-md-offset-6" id="update-btn">update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <table id="tableContent" class="table table-bordered">
+                
+            </table>
+        </div>
+    </div>
+<script src="../static/jquery.js"></script>
+<script src="../static/jquery-ui.js"></script>
+<script src="../static/bootstrap.min.js"></script>
+<script src="../static/sweetalert.min.js"></script>
+<script>
+    $('#sliderMem').slider({
+        animate: "fast",
+        max: 128,
+        min: 1,
+        slide: function(e, ui){
+            $('#sliderValue').html(ui.value + 'G')
+        }
+    });
+
+    $('#inputDate').datepicker({
+        dateFormat: 'yy-mm-dd'
+    })
+
+    $('#modSliderMem').slider({
+        animate: "fast",
+        max: 128,
+        min: 1,
+        slide: function(e, ui){
+            $('#modSliderValue').html(ui.value + 'G')
+        }
+    });
+
+    $('#modDate').datepicker({
+        dateFormat: 'yy-mm-dd'
+    })
+
+    $(document).on('click', '#add-btn', function(){
+        var add_host = $('#inputHost').val()
+        var add_mem = $('#sliderMem').slider('value')
+        var add_date = $('#inputDate').val()
+        $.get('/addHost?host='+add_host+'&mem='+add_mem+'&date='+add_date, function(data){
+            if (data == 'ok') {
+                swal('Success', 'Success add host', 'success')
+                getList()
+            }else {
+                console.log('add data error')
+            }
+        })
+    })
+
+    $(document).on('click', '#del-btn', function(){
+        var del_id = $(this).attr('del-data')
+        console.log(del_id)
+        $.get('/delHost?id='+del_id, function(data){
+            if (data == 'ok') {
+                swal({   title: "Are you sure?",   text: "Your will not be able to recover this imaginary file!",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){   swal("Deleted!", "Your imaginary file has been deleted.", "success"); getList() });
+            } else {
+                 console.log('delete data error')
+            }
+        })
+    })
+
+
+    $(document).on('click', '#mod-btn', function(){
+        $('#modContent').modal('show')
+        var mod_id = $(this).attr('mod-data')
+        $(document).on('click', '#update-btn', function(){
+            var mod_host = $('#modHost').val()
+            var mod_mem = $('#modSliderMem').slider('value')
+            var mod_date = $('#modDate').val()
+            $.get('/modHost?id='+mod_id+'&host='+mod_host+'&mem='+mod_mem+'&date='+mod_date, function(data){
+                if (data == 'ok') {
+                    swal({   
+                        title: "Are you sure?",   
+                        text: "Your will modify this imaginary file!",   
+                        type: "warning",   
+                        showCancelButton: true,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "Yes, modify it!",   
+                        closeOnConfirm: false 
+                    }, function(){   
+                        swal("Modify!", "Your imaginary file has been modify.", 
+                            "success"); 
+                        $('#modContent').modal('hide')
+                        getList()
+                        return -1
+                    });
+                } else {
+                    console.log('modify data error')
+                }
+            })
+        })
+    })
+
+    function getList(){
+        $.post('/', function(data){
+            var data = JSON.parse(data)
+            var tmp = '<tr><th>id</th><th>host</th><th>memory</th><th>end date</th><th>mod</th><th>del</th></tr>'
+            $.each(data, function(index, value){
+                tmp += '<tr>'
+                tmp += '<td>'+ value[0] +'</td>'
+                tmp += '<td>'+ value[1] +'</td>'
+                tmp += '<td>'+ value[2] +'</td>'
+                tmp += '<td>'+ value[3] +'</td>'
+                tmp += '<td><button type="button" data-toggle="modal" data-target="#modContent" class="btn btn-primary" id="mod-btn" mod-data="'+ value[0] +'">mod</button></td>'
+                tmp += '<td><button type="button" class="btn btn-danger" id="del-btn" del-data="'+ value[0] +'">del</button></td>'
+                tmp += '</tr>'
+            })
+            $('#tableContent').html(tmp)
+        })
+    }
+    getList()
+</script>
+</body>
+</html>
