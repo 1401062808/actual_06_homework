@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="/static/bootstrap.min.css">
+	<style>
+		.container{
+			margin-top: 50px;
+		}
+		#server-list{
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<form class="form-inline">
+  					<div class="form-group">
+    					<label for="exampleInputName2">Name</label>
+    					<input type="text" class="form-control" id="name-input">
+  					</div>
+  					<div class="form-group">
+    					<label for="exampleInputEmail2">Mem</label>
+    					<input type="text" class="form-control" id="mem-input">
+  					</div>
+  					<button id='add-btn' type="button" class="btn btn-default">添加</button>
+				</form>
+				<table id='server-list' class="table table-bordered text-center">
+					
+				</table>
+			</div>
+		</div>
+	</div>
+<script src='/static/jquery.js'></script>
+<script>
+	$(document).on('click','.del-btn',function(){
+		var id = $(this).attr('data-id')
+		$.get('/del?id='+id,function(data){
+			if(data=='ok'){
+				getList()
+			}
+		})
+	})
+	$('#add-btn').on('click',function(){
+		name = $('#name-input').val()
+		mem = $('#mem-input').val()
+		$.get('/add?name='+name+'&mem='+mem,function(res){
+			if(res=='ok'){
+				getList()
+			}
+		})
+	})
+	function getList(){
+		$.getJSON('/list',function(data){
+			tmp = ''
+			$.each(data,function(index,value){
+				tmp += '<tr><td>' + value[0] +'</td><td>'+value[1]+'</td><td>'+value[2]+'</td><td><button class="del-btn btn btn-danger" data-id="'+value[0]+'">delete</button></td></tr>'
+			})
+			console.log(data)
+			$('#server-list').html(tmp)
+		})
+	}
+getList()
+</script>
+
+</body>
+</html>
