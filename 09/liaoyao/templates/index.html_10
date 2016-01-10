@@ -7,16 +7,10 @@
        	<link href="/static/jquery-ui.css" rel="stylesheet"> 
        	<link href="/static/sweetalert.css" rel="stylesheet"> 
 <style>
-	#name-input{
-		width:100px;
-	}
-	#host-table{
-		margin-top:20px;
-	}
 	#page-body{
 		margin-top: 20px;
 	}
-	#mem-slide{
+	#mem-slider{
 		display:inline-block;
 		width:80px;
 		margin-left:10px;
@@ -57,33 +51,6 @@
 <script src='/static/sweetalert.min.js'></script>
 
 <script>
-	$('#add-btn').on('click',function(){
-		var name = $('#name-input').val()
-		var mem = $('#mem-slide').slider('value')
-		var end_date = $('#date-input').val()
-		console.log(name)
-		console.log(mem)
-		console.log(end_date)
-		$.get('/addhost?name='+name+'&mem='+mem+'&end_date='+end_date,function(res){
-			console.log(res)
-			if(res=='ok'){
-				swal('success','add sueecee','success')
-				getList()
-			}else{
-				alert('error')
-			}
-		})
-	})
-	$('#date-input').datepicker({
-		dateFormat:'yy-mm-dd'
-	})
-	$('#mem-slide').slider({
-		max:32,
-		main:1,
-		slide:function(e,ui){
-			$('#mem-value').html(ui.value+'G')
-		}
-	})
 	function getList(){
 	$.post('/',function(res){
 		tmp = ''

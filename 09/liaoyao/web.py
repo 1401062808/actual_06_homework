@@ -20,6 +20,19 @@ def index():
 		res = cur.execute(sql)
 		return json.dumps(cur.fetchall())
 
+@app.route('/addhost')
+def addhost():
+	name = request.args.get('name')
+	mem = request.args.get('mem')
+	end_date = request.args.get('end_date')
+	sql = 'insert into server10 (name,memory,end_date) values ("%s",%s,"%s")' % (name,mem,end_date)
+	print sql
+	res = 'ok'
+	try:
+		cur.execute(sql)
+	except:
+		res = 'error in sql'
+	return res
 
 if __name__ == '__main__':
 	app.run(debug=True,host='0.0.0.0',port=9092)
