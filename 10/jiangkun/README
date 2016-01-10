@@ -1,0 +1,16 @@
+# 说明和问题
+
+## 1.上次作业
+
+### 1.1 完成功能
+
+* 删除功能
+* 修改功能
+
+## 1.2 问题
+
+* mod-btn click event 中关于局部变量作用域的问题？
+
+* jquery 异步修改的页面元素的值，如何获取该值？
+
+* jquery和flask 如何实现异步的RESTful  methods=['GET', 'DELETE', 'MODIFY']
