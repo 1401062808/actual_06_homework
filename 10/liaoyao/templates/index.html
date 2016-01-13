@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Homework 09</title>
+	<link href="/static/bootstrap.min.css" rel="stylesheet"> 
+       	<link href="/static/jquery-ui.css" rel="stylesheet"> 
+       	<link href="/static/sweetalert.css" rel="stylesheet"> 
+<style>
+	#name-input{
+		width:100px;
+	}
+	#host-table{
+		margin-top:20px;
+	}
+	#page-body{
+		margin-top: 20px;
+	}
+	#mem-slide{
+		display:inline-block;
+		width:80px;
+		margin-left:10px;
+		margin-right:10px;
+	}
+</style>
+</head>
+<body>
+
+<div id='page-body' class="container">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+                	<form class='form-inline'>
+                        	<div class="form-group">
+                                	<label>Name</label>
+                                	<input type="text" id='name-input' class='form-control'>
+                        	</div>
+                        		<div class='form-group'>
+                                	<label>Memery</label>
+                                	<span id='mem-slide'></span>
+                                	<label id='mem-value'>1G</label>
+                        	</div>
+                        	<div class="form-group">
+                                	<label>end_date</label>
+                                	<input type="text" id='date-input' class='form-control'>
+                        	</div>
+                        	<button id='add-btn' type='button' class="btn btn-success">add</button>
+                	</form>
+
+			<table class='table table-bordered' id="host-table">
+
+			</table>
+		</div>
+	</div>
+</div>
+<script src='/static/jquery.js'></script>
+<script src='/static/jquery-ui.js'></script>
+<script src='/static/sweetalert.min.js'></script>
+
+<script>
+	$('#add-btn').on('click',function(){
+		var name = $('#name-input').val()
+		var mem = $('#mem-slide').slider('value')
+		var end_date = $('#date-input').val()
+		console.log(name)
+		console.log(mem)
+		console.log(end_date)
+		$.get('/addhost?name='+name+'&mem='+mem+'&end_date='+end_date,function(res){
+			console.log(res)
+			if(res=='ok'){
+				swal('success','add sueecee','success')
+				getList()
+			}else{
+				alert('error')
+			}
+		})
+	})
+	$('#date-input').datepicker({
+		dateFormat:'yy-mm-dd'
+	})
+	$('#mem-slide').slider({
+		max:32,
+		main:1,
+		slide:function(e,ui){
+			$('#mem-value').html(ui.value+'G')
+		}
+	})
+	
+	$(document).on('click','.del-btn',function(){
+		var id = $(this).attr('data-id')
+		$.post('/delhost',{"id":id},function(res){
+			if(res=='ok'){
+				getList()
+			}else{
+				swal('error')
+			}
+			
+		})
+	})
+	
+
+	function getList(){
+	$.post('/',function(res){
+		tmp = ''
+		var res = JSON.parse(res)
+		$.each(res,function(index,value){
+			tmp +='<tr>'
+			tmp +='<td>'+value[1]+'</td>'	
+			tmp +='<td>'+value[2]+'</td>'	
+			tmp +='<td>'+value[3]+'</td>'
+			tmp +='<td><button data-id="'+value[0]+'"class="btn btn-danger btn-xs del-btn">delete</button></td>'	
+			tmp += '</tr>'
+		})
+		$('#host-table').html(tmp)
+		console.log(typeof res)
+		console.log(res)
+	})
+	}
+	getList()
+</script>
+
+</body>
+</html>
