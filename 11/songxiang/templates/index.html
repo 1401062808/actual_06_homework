@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>root</title>
+		<link rel="stylesheet" href="/static/bootstrap.css">
+		<link rel="stylesheet" href="/static/jquery-ui.css">
+		<link rel="stylesheet" href="/static/sweetalert.css">
+		<style>
+			#name-input{
+				width: 100px;
+			}
+			#page-body{
+				margin-top: 20px;
+			}
+			#host-table{
+				margin-top: 20px;
+			}
+			#mem-slide{
+				display:inline-block;
+				width:80px;
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			#update-mem{
+				margin-top: 5px;
+				margin-left: 15px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id ="page-body" class="container">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-3">
+					<form class="form-inline">
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" class="form-contol" id="name-input"></input>
+						</div>
+						<div class="form-group">
+							<label>Memery</label>
+							<span id="mem-slide"></span>
+							<label id = "mem-value">0G</label>
+						</div>
+						<div class="form-group">
+							<label>end_date</label>
+							<input type="text" class="form-contol" id="date-input"></input>
+						</div>
+						<button id="add-btn" type="button" class="btn btn-success">提交</button>
+						
+					</form>
+					<table id = "host-table" class="table table-bordered"></table>	
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id ="update-mode">
+			<div class="modal-dialog">
+			  <div class="modal-content">
+			    <div class="modal-header">
+			      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        		<h4 class="modal-title">update</h4>
+			   </div>
+			    <div class="modal-body">
+			      <form class="form-horizontal">
+					  <div class="form-group">
+					    <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+					    <div class="col-sm-10">
+					      <input type="text" class="form-control" id="name-update" >
+					    </div>
+					  </div>
+
+					   <div class="form-group">
+					    <label  class="col-sm-2 control-label">mem</label>
+					    <div id="update-mem" class="col-sm-6">
+					    </div>
+					    <div class="col-md-3" id='update-memtext'></div>
+					  </div>
+
+					   <div class="form-group">
+					    <label  class="col-sm-2 control-label">end_date</label>
+					    <div class="col-sm-10">
+					      <input type="text" class="form-control" id="date-update" >
+					    </div>
+					  </div>
+
+					</form>
+
+			    </div>
+			    <div class="modal-footer">
+			      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      <button type="button" class="btn btn-primary" id="update-confirm">Save changes</button>
+			    </div>
+			  </div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		
+		<script src='/static/jquery.min.js'></script>
+		<script src='/static/jquery-ui.js'></script>
+		<script src='/static/sweetalert.min.js'></script>
+		<script src='/static/bootstrap.js'></script>
+		<script >
+		$('#add-btn').on('click',function(){
+			var name = $('#name-input').val()
+			var mem = $('#mem-slide').slider('value')
+			var end_date = $('#date-input').val()
+			// console.log(name)
+			// console.log(mem)
+			// console.log(end_date)
+			$.get('/addhost?name='+name+'&mem='+mem+'&end_date='+end_date,function(res){
+				if(res=='ok'){
+					swal('success','add success','success')
+					getList()
+				}else{
+					alert('error')
+				}
+				
+			})
+			$('#name-input').val('')
+			$('#date-input').val('')
+		})
+		$('#date-input').datepicker({
+			dateFormat:'yy-mm-dd'
+		})
+		$('#date-update').datepicker({
+			dateFormat:'yy-mm-dd'
+		})
+		$('#mem-slide').slider({
+			max:32,
+			min:1,
+			slide:function(e,ui){
+				console.log(ui.value)
+				$('#mem-value').html(ui.value+'G')
+			}
+		})
+		$('#update-mem').slider({
+			max:32,
+			min:1,
+			slide:function(e,ui){
+				console.log(ui.value)
+				$('#update-memtext').html(ui.value+'G')
+			}
+		})
+		$(document).on('click','.del-btn',function(){
+			var id = $(this).attr('data-id')
+			swal({
+				title: "Are you sure?",
+				text: "Your will not be able to recover this imaginary file!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes, delete it!",
+				closeOnConfirm: false
+			}, function() {
+
+				$.post('/delhost',{"id":id},function(res){
+				if(res=='ok'){
+					swal("Deleted!", "Your imaginary file has been deleted.", "success")
+					getList()
+				}
+				else{
+					swal('error')		
+				}
+			})
+			})
+			
+		})
+		$(document).on('click', '.update-btn', function() {
+			var id = $(this).attr('data-id')
+			var name = $(this).attr('data-name')
+			var mem = $(this).attr('data-mem')
+			var date = $(this).attr('data-date')
+
+			$('#name-update').val(name)
+			$('#date-update').val(date)
+			$('#update-mem').slider("value", mem)
+			$('#update-memtext').html(mem + 'G')
+			$('#update-mode').model('show')
+
+			$('#update-confirm').off('click.reboot').on('click.reboot', function({
+				$.post('/updatehost', {
+					id: id,
+					name: $('#name-update').slider('value'),
+					date: $('#date-update').val()
+				},function(res) {
+						if (res == 'ok') {
+							swal('update success')
+							$('#update-modal').modal('hide')
+							getList()
+					}
+				}
+			})
+		})
+		function getList() {
+			$.post('/', function(res) {
+				var res = JSON.parse(res)
+				var tmp = ''
+				$.each(res, function(index, value) {
+					tmp += '<tr>'
+					tmp += '<td>' + value[1] + '</td>'
+					tmp += '<td>' + value[2] + '</td>'
+					tmp += '<td>' + value[3] + '</td>'
+					tmp += '<td><button data-id="' + value[0]+ '" class="btn btn-danger btn-xs del-btn">delete</button></td>'
+					tmp += '<td><button data-name='+vlaue[1]+'data-mem'+vlaue[2]+'data-date'+value[3]+'data-id="' + value[0]+ '" class="btn btn-success btn-xs update-btn">update</button></td>'
+				})
+				$('#host-table').html(tmp)
+
+			})
+		}
+		getList()
+		
+		</script>
+	</body>
+</html>
