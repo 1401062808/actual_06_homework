@@ -4,9 +4,32 @@ import MySQLdb
 import json
 
 app = Flask(__name__)
-conn = MySQLdb.connect(user='root', passwd='root', db='mo')
-conn.autocommit(True)
-cur = conn.cursor()
+
+class DB():
+    def __init__(self, host, user, passwd, db):
+        self.host = host
+        self.user = user
+        self.passwd = passwd
+        self.db = db
+        self.conn = None
+        self.db_connect()
+
+    def db_connect(self):
+        self.conn = MySQLdb.connect(host=self.host, user=self.user, passwd=self.passwd, db=self.db)
+        self.conn.autocommit(True)
+
+    def db_execute(self, sql):
+        try:
+            cur = self.conn.cursor()
+            cur.execute(sql)
+        except:
+            print 'db reconnect...'
+            self.db_connect()
+            cur = self.conn.cursor()
+            cur.execute(sql)
+        return cur 
+
+db = DB('localhost', 'root', 'root', 'mo')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -15,7 +38,7 @@ def index():
         return render_template('index.html')
     elif request.method == 'POST':
         sql = 'select * from t_hosts order by id desc'
-        cur.execute(sql)
+        cur = db.db_execute(sql)
         return json.dumps(cur.fetchall())
 
 @app.route('/addHost')
@@ -26,27 +49,27 @@ def addHost():
     sql = 'insert into t_hosts(host, memory, endDate) values("%s", %s, "%s")' %(host, mem, date)
     data = 'ok'
     try:
-        cur.execute(sql)
+        db.db_execute(sql)
     except:
         data = 'mysql execute error'
         raise data
     finally:
         return data
 
-@app.route('/delHost')
+@app.route('/delHost', methods=['POST'])
 def delHost():
     id = request.args.get('id')
     sql = 'delete from t_hosts where id="%s"' %id
     data = 'ok'
     try:
-        cur.execute(sql)
+        db.db_execute(sql)
     except:
         data = 'mysql execute error'
         raise data
     finally:
         return data
 
-@app.route('/modHost')
+@app.route('/modHost', methods=['POST'])
 def modhost():
     id = request.args.get('id')
     host = request.args.get('host')
@@ -57,7 +80,7 @@ def modhost():
     print sql
     data = 'ok'
     try:
-        cur.execute(sql)
+        db.db_execute(sql)
     except:
         data = 'mysql execute error'
         raise data
