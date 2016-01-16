@@ -15,7 +15,6 @@ for p in range(1,6):
     for zs in zh_summary:
         zs_list.append(pq(zs).text())
 
-#在不同页码出现IndexError: list index out of range的错误，原因？
 for i in range(100):
     print '--------',i+1,'--------',
     print ql_list[i]
