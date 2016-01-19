@@ -87,17 +87,29 @@
 	
 	$(document).on('click','.del-btn',function(){
 		var id = $(this).attr('data-id')
-		$.post('/delhost',{"id":id},function(res){
-			if(res=='ok'){
-				getList()
-			}else{
-				swal('error')
-			}
+		swal({
+			title: "Are you sure?",
+			text: "Delete?",
+			type: "Warning",
+			type: "warning",
+                	showCancelButton: true,
+                    	confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: false
+                        }, 
+     		function() {
+			$.post('/delhost',{"id":id},function(res){
+				if(res=='ok'){
+					swal('delete success!')
+					getList()
+				}else{
+					swal('error')
+				}
 			
+			})
 		})
-	})
 	
-
+		});
 	function getList(){
 	$.post('/',function(res){
 		tmp = ''
